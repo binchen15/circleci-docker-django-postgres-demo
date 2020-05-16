@@ -1,0 +1,37 @@
+version: '3'
+  
+services:
+    db:
+      image: postgres
+      environment:
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+      ports:  # only host cares this
+        - "5432:5432"
+      expose: # to other containers
+        - "5432"
+      # command: -p 54321 # to change the server port
+    web:
+      build: .
+      command: >
+        sh -c "cd circle_dj_pg_demo &&
+               sleep 10 &&
+               python manage.py makemigrations --noinput &&
+               python manage.py migrate &&
+               python manage.py test &&
+               python manage.py runserver 0.0.0.0:8000" 
+      #python manage.py migrate &&
+      environment:
+        - DB_HOST=db
+        - DB_NAME=postgres
+        - DB_USER=postgres
+        - DB_PASSWORD=postgres
+        - DB_PORT=5432
+      volumes:
+        - .:/app
+      ports:
+        - "8000:8000"
+      depends_on:  # not enough. need wait_for_it.sh or sleep
+        - db
+

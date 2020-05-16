@@ -1,0 +1,9 @@
+
+# virtualenv
+venv
+
+# sqlite3 database
+circle_dj_pg_demo/db.sqlite3
+
+# pycache
+**/__pycache__/
