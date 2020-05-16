@@ -35,8 +35,8 @@ jobs:
           command: |
             . venv/bin/activate
             cd circle_dj_pg_demo
-            python manage.py collectstatic
-            python manage.py migrate
+            python manage.py collectstatic --no-input
+            python manage.py migrate --no-input
       # Step 4: run django tests suites
       - run:
           name: run tests
