@@ -1,0 +1,46 @@
+# Python CircleCI 2.0 configuration file
+# demo project circleci-django-postgres
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7
+        environment:
+          DB_HOST: localhost
+          DB_NAME: postgres
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_PORT: 5432
+
+      - image: circleci/postgres:latest
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
+    working_directory: ~/app
+
+    steps:
+      # Step 1: obtain repo from GitHub
+      - checkout
+      # Step 2: create virtual env and install dependencies
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      # Step 3: migrate database, collectstatic
+      - run:
+          name: migrate and collectstatic
+          command: |
+            . venv/bin/activate
+            cd circle_dj_pg_demo
+            python manage.py collectstatic
+            python manage.py migrate
+      # Step 4: run django tests suites
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            cd circle_dj_pg_demo
+            python manage.py test

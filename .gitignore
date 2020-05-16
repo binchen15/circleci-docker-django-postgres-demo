@@ -7,3 +7,6 @@ circle_dj_pg_demo/db.sqlite3
 
 # pycache
 **/__pycache__/
+
+# static to be collected later on
+circle_dj_pg_demo/assets/static
